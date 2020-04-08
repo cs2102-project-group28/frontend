@@ -8,7 +8,7 @@
 	export default {
 	  name: "App",
 	  mounted() {
-	    this.$router.replace({ name: "login" });
+	    this.$router.replace({ name: "view_order" });
 	  }
 	}	
 </script>

@@ -1,6 +1,7 @@
 <!-- /* eslint-disable no-unused-vars */
 /* eslint-enable no-unused-vars */ -->
 <template>
+  <v-app>
   <v-container fill-height>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md8>
@@ -13,13 +14,13 @@
               <v-alert
                 :value="userExists"
                 color="error"
-                icon="warning"
+                icon="mdi-fire"
               >This user already exists, try a different set of data.</v-alert>
               
               <v-alert
                 :value="notMatchConfirmPassword"
                 color="error"
-                icon="warning"
+                icon="mdi-fire"
               >Password and confirmed password does not match.</v-alert>
 
               <v-text-field
@@ -56,9 +57,9 @@
           </v-card-text>
           <v-divider light></v-divider>
           <v-card-actions>
-            <v-btn to="/login" round color="black" dark>Back</v-btn>
+            <v-btn to="/login" rounded color="black" dark>Back</v-btn>
             <v-spacer></v-spacer>
-            <v-btn round color="black" dark @click.prevent="register()">
+            <v-btn rounded color="black" dark @click.prevent="register()">
               Create
             </v-btn>
           </v-card-actions>
@@ -66,6 +67,7 @@
       </v-flex>
     </v-layout>
   </v-container>
+</v-app>
 </template>
 
 <script>

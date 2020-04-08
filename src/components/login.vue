@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <v-container fill-height>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md8>
@@ -21,9 +22,9 @@
             </v-card-text>
             <v-divider light></v-divider>
             <v-card-actions>
-              <v-btn to="/register" round color="indigo" dark>Register</v-btn>
+              <v-btn to="/register" rounded color="indigo" dark>Register</v-btn>
               <v-spacer></v-spacer>
-              <v-btn round color="primary" dark @click.prevent="login()">
+              <v-btn rounded color="primary" dark @click.prevent="login()">
                 Login
               </v-btn>
             </v-card-actions>
@@ -32,6 +33,7 @@
       </v-flex>
     </v-layout>
   </v-container>
+</v-app>
 </template>
 
 <script>
@@ -44,7 +46,7 @@ export default {
   }),
   methods: {
     login() {
-      this.$router.push("/customers/" + this.username);
+      this.$router.push("/customers");
       this.$store.dispatch("LOGIN", {
         username: this.username,
         password: this.password

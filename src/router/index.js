@@ -10,7 +10,6 @@ import Account from "@/components/customers/ViewAccount.vue";
 import ViewOrder from "@/components/customers/ViewOrder.vue";
 import ViewPromotion from "@/components/customers/ViewPromotion.vue";
 import Menu from "@/components/customers/Menu.vue";
-import PlaceOrder from "@/components/customers/PlaceOrder.vue";
 import CheckOut from "@/components/customers/Checkout.vue";
 
 //Staffs
@@ -52,7 +51,10 @@ var routes_shared = [
   }
 ];
 
-const customer_base_url = "/customers/:username";
+//const customer_base_url = "/customers/:username";
+const customer_base_url = "/customers";
+
+
 const routes_customers = [
   {
     path: customer_base_url,
@@ -60,17 +62,12 @@ const routes_customers = [
     component: CustomerMain
   },
   {
-    path: customer_base_url + "/:restaurant/menu",
+    path: "/menu", //customer_base_url + "/:restaurant/menu",
     name: "menu",
     component: Menu
   },
   {
-    path: customer_base_url + "/:restaurant/order",
-    name: "place_order",
-    component: PlaceOrder
-  },
-  {
-    path: customer_base_url + ":restaurant/checkout",
+    path: "/checkout", //customer_base_url + ":restaurant/checkout",
     name: "checkout",
     component: CheckOut
   },
@@ -80,7 +77,7 @@ const routes_customers = [
     component: Account
   },
   {
-    path: customer_base_url + "/order",
+    path: "/view_order", //customer_base_url + "/order",
     name: "view_order",
     component: ViewOrder
   },

@@ -3,26 +3,15 @@ import axios from "axios";
 const back_end_base = "http://IP:PORT"
 
 export default {
-  state: {
-    authenticated: false
-  },
-  getters: {
-    AUTHENTICATE: state => {
-      return state.authenticated;
-    }
-  },
-  mutations: {
-    SET_AUTHENTICATE: (state, value) => {
-      //Should assert here to check if it's false
-      state.authenticated = value;
-    }
-  },
+  state: {},
+  getters: {},
+  mutations: {},
   actions: {
-    LOGIN: (payload) => {
+    MENU: ({ commit }, payload) => {
       return new Promise((resolve, reject) => {
         axios
-          .post(back_end_base + "/login", payload)
-          .then(({ status }) => {
+          .post(back_end_base + "/customers" + this.$route.username, payload)
+          .then(({ data, status }) => {
             if (status === 200) {
               resolve(true);
             }
@@ -32,7 +21,7 @@ export default {
           });
       });
     },
-    REGISTER: ({ username, email, password }) => {
+    GET_ACCOUNT: ({ commit }, { username, email, password }) => {
       return new Promise((resolve, reject) => {
         axios
           .post(back_end_base + "/register", {
@@ -40,7 +29,7 @@ export default {
             email,
             password
           })
-          .then(({ status }) => {
+          .then(({ data, status }) => {
             if (status === 201) {
               resolve(true);
             }
