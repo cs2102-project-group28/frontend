@@ -69,7 +69,7 @@
           <v-card-actions>
             <v-btn to="/login" rounded color="black" dark>Back</v-btn>
             <v-spacer></v-spacer>
-            <v-btn rounded color="black" dark @click.prevent="register()">
+            <v-btn rounded color="black" dark @click  ="register()">
               Create
             </v-btn>
           </v-card-actions>
@@ -83,7 +83,13 @@
 <script>
 import axios from "axios";
 
-const back_end_base = "http://0.0.0.0:5000"
+const back_end_base = "http://localhost:5000"
+
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};
 
 export default {
   name: "Register",
@@ -95,6 +101,7 @@ export default {
     username: '', 
     phone: '',
     password: "",
+    confirm_password: '',
     notMatchConfirmPassword: false,
     status: 200,
     rules: {
@@ -108,18 +115,20 @@ export default {
   methods: {
     register() {
       if (this.valid()) {
-        var back_end_schema = back_end_base + '/register'
+        var back_end_schema = back_end_base + '/register';
 
         axios.post(back_end_schema, { 
           username: this.username,
           password: this.password, 
           phone: this.phone, 
-          user_type: this.user_type_backend[this.user_type_select(this.radioGroup)], 
-          rider_type: this.rider_type(this.user_type)})
+          userType: this.user_type_backend[this.user_type_select(this.radioGroup)], 
+          riderType: this.rider_type(this.user_type)}, options)
         .then((response) => {
         if(response.status == 200) {
           this.$router.push('/login')
-        }  
+        }
+        else 
+          console.log(response)  
       }, (error) => {
         console.log(error);
       });

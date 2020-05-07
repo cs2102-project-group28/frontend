@@ -39,7 +39,7 @@
 <script>
 import axios from "axios";
 
-const back_end_base = "http://0.0.0.0:5000"
+const back_end_base = "http://localhost:5000"
 
 export default {
   name: "Login",
@@ -55,11 +55,12 @@ export default {
       axios.post(back_end_schema, { username: this.username, password: this.password})
       .then((response) => {
         if(response.status == 200) {
-          if(response.data.pos == 'customer')
+          console.log(response.data)
+          if(response.data.position == 'customer')
             this.$router.push(back_end_base + '/customers/' + this.username)
-          else if(response.data.pos == 'staffs') 
+          else if(response.data.position == 'staffs') 
             this.$router.push(back_end_base + '/staffs/' + this.username)
-          else if(response.data.pos == 'manager') 
+          else if(response.data.position == 'manager') 
             this.$router.push(back_end_base + '/managers/' + this.username)
           else 
             this.$router.push(back_end_base + '/riders/' + this.username)
