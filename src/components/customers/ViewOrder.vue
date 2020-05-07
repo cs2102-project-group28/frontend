@@ -70,64 +70,6 @@
 	      { text: '', value: 'actions', sortable: false },
 	    ],
 	    orders:[
-	    	{
-	    	restaurant: "Delight dessert",
-	    	total: 20,
-	    	start_time: "08 April 2020 15:30:00",
-		    items: [
-			        {
-			          name: 'Frozen Yogurt',
-			          number_order: 8,
-			          price: 1.5 
-			        },
-			        {
-			          name: 'Ice cream sandwich',
-			          number_order: 8,
-			          price: 1.2
-			        },
-			        {
-			          name: 'Eclair',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Cupcake',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Gingerbread',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Jelly bean',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Lollipop',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Honeycomb',
-			          number_order: 8,
-			          price: 1.5
-			        },
-			        {
-			          name: 'Donut',
-			          number_order: 8,
-			          price: 1.3
-			        },
-			        {
-			          name: 'KitKat',
-			          number_order: 8,
-			          price: 1.0
-			        },
-			      ],
-			not_cancelable: false,
-			},
 	    ],	
 	  }),
 

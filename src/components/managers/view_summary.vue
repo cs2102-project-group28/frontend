@@ -181,6 +181,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const back_end_base = "http://localhost:5000"
+
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+  }
+}; 
+
 export default {
   name: 'ManagerSummary',
   props: {
@@ -232,7 +242,20 @@ export default {
       this.$router.push("/");
     },
     update (){
-        //query to back end to update summary here
+    for(var month in this.months_selected) {
+      var back_end_schema = back_end_base + "/manager/" + this.$route.params.username + '/month-summary/' + (month.getMonth()+1) + "/" + month.getFullYear() 
+      var data = {}
+      axios.post(back_end_schema, data, options)  
+      .then((response) => {
+        if(response.status == 200) {
+          console.log(response.data.data)
+          this.months.push(response.data.data)
+        }
+      }, (error) => {
+        console.log(error);
+      });          
+    }
+
     },
     clear() {
       this.$data.months_selected = [];

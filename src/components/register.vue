@@ -116,7 +116,6 @@ export default {
     register() {
       if (this.valid()) {
         var back_end_schema = back_end_base + '/register';
-
         axios.post(back_end_schema, { 
           username: this.username,
           password: this.password, 

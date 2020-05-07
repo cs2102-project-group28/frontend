@@ -1,6 +1,5 @@
 <template>
 <div id="main_customer">
-
 	<v-app id="inspire">
 		<v-app-bar
 		absolute
@@ -9,7 +8,7 @@
 		scroll-target="#scrolling-techniques-7">
 			<v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-			<v-toolbar-title >LIGHTING DELIVERY</v-toolbar-title>
+			<v-toolbar-title>LIGHTING DELIVERY</v-toolbar-title>
 
 			<v-spacer></v-spacer>
 
@@ -41,26 +40,34 @@
 			:search="search"
 			>
 			<v-spacer></v-spacer>
-			    <template v-slot:item.actions="">
-		        <v-icon
-		          large
-		          class="mr-2"
-		          @click="view_res_menu()"
-		        >
-		          mdi-menu-right
-		        </v-icon>
-		      </template>	
+			<template v-slot:item.actions="{item}">
+	        <v-icon
+	          large
+	          class="mr-2"
+	          @click="view_res_menu(item)"
+	        >
+	          mdi-menu-right
+	        </v-icon>		
+		    </template>	
 
 			</v-data-table>		
 		</v-card>
-
-
 	</v-app>    
 </div>
 </template>
 
 
 <script>
+import axios from "axios";
+
+const back_end_base = "http://localhost:5000"
+
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};
+
 export default {
     name: "CustomerMain", 
     data () {
@@ -71,46 +78,56 @@ export default {
 				  text: 'Restaurant',
 				  align: 'start',
 				  filterable: true,
-				  value: 'name',
+				  value: 'rName',
 				},
-				{ text: 'Category', value: 'category' },
+				{ text: 'Category', value: 'rCategory' },
 				{ text: 'Location', value: 'location' },
 				{ text: '', value: 'actions', sortable: false, width: 200 },
 			],
 			mock_data: [
 				{
-				  name: 'Frozen',
-				  category: 'Western',
+				  rName: 'Frozen',
+				  rCategory: 'Western',
 				  location: 'SG'
 				},
 				{
-				  name: 'Mala',
-				  category: 'Spicy',
+				  rName: 'Mala',
+				  rCategory: 'Spicy',
 				  location: 'SG'
 				},
-				{
-				  name: 'Eclair shop',
-				  category: 'Desserts',
-				  location: 'SG'
-				}
-			],
-			res_data: ''    		    		
+			],    		    		
 		}
 	},
+
+    created () {
+	    this.initialize()
+	},
+
     methods: {
-    	load_restaurent() {
-		this.$store.dispatch("MENU")
-	      .then(data => {
-	        this.res_data = data;
-	        console.log("success");
-	      })
-	      .catch(error => {
-	        this.error = true;
-	        console.log(error);
-	      })    		
+    	initialize() {
+    		this.load_restaurent()
     	},
-	    view_res_menu() {
-	    	this.$router.push("/menu")
+    	load_restaurent() {
+    		var back_end_schema = back_end_base + '/customer/' + this.$route.params.username + '/search-restaurant/restaurant'
+    		var data = {
+    			rName: '',
+    			rCategory: '',
+    			location: '',
+    			fName: '',
+    			fCategory: '',
+    		}
+      		axios.post(back_end_schema, data, options)
+      		.then((response) => {
+      			if(response.status == 200) {
+      				this.mock_data = response.data.data
+      			}
+      		}, (error) => {
+        		console.log(error);
+      		});
+    	},
+	    view_res_menu(item) {
+	    	var schema = "/customers/" + this.$route.params.username + "/" + item.rName + "/menu" 
+	    	this.$router.push(schema)
 	    }
     }
 };

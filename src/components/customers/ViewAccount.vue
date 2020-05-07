@@ -130,70 +130,81 @@
 </template>
 
 <script>
-    export default {
-      name: 'Account',
-		  data: () => ({
-		    dialog: false,
-		    details: '',
-		    update: {
-		          password: '',
-		          phone: 0,
-		          creditcard_number: 0,
-		          ccv: 0,
-		    },
-		    default: {
-		          password: '',
-		          phone: 0,
-		          creditcard_number: 0,
-		          ccv: 0,
-		    },
-		  }),
+import axios from "axios";
 
-		  created () {
-		    this.initialize()
-		  },
+const back_end_base = "http://localhost:5000"
 
-		  watch: {
-		    dialog (val) {
-		      val || this.close()
-		    },
-		  },
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};  
+export default {
+  name: 'Account',
+  data: () => ({
+    dialog: false,
+    details: '',
+    update: {
+          password: '',
+          phone: 0,
+          creditcard_number: 0,
+          ccv: 0,
+    },
+    default: {
+          password: '',
+          phone: 0,
+          creditcard_number: 0,
+          ccv: 0,
+    },
+  }),
+
+  created () {
+    this.initialize()
+  },
+
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+  },
 
 
-		  methods: {
-		    initialize () {
-		      this.details = 
-		        {
-		          user_name: 'Mr. Test',
-		          password: 'asdwahdjafj',
-		          phone: 12345678,
-		          creditcard_number: 1234456789011231,
-		          ccv: 123,
-		          reward_points: 9999,
-		        }
-		    },
-	        back() {
-      			this.$router.go(-1);
-    		},
-		    edit () {
-		      this.dialog = true
-		    },
+  methods: {
+    initialize () {
+    var back_end_schema = back_end_base + this.$route.params.username + '/profile'
+    var data = {}
+    axios.post(back_end_schema, data, options)  
+    .then((response) => {
+      if(response.status == 200) {
+        console.log(response.data.data)
+        this.details = response.data.data
+      }
+    }, (error) => {
+      console.log(error);
+    });
+    },
+      back() {
+  			this.$router.go(-1);
+		},
+    edit () {
+      this.dialog = true
+    },
 
-		    close () {
-		      this.dialog = false
-		      setTimeout(() => {
-		        this.update = Object.assign({}, this.default)
-		      }, 300)
-		    },
+    close () {
+      this.dialog = false
+      setTimeout(() => {
+        this.update = Object.assign({}, this.default)
+      }, 300)
+    },
 
-		    save () {
-		    	//Send edit here, check valid then update this
-		        this.details.password = this.update.password
-		        this.details.phone = this.update.phone
-		        this.details.creditcard_number = this.update.creditcard_number
-		        this.details.ccv = this.update.ccv
-		        this.close()
-		    },
-	      }        
-    }
+    save () {
+    	//Send edit here, check valid then update this
+        this.details.password = this.update.password
+        this.details.phone = this.update.phone
+        this.details.creditcard_number = this.update.creditcard_number
+        this.details.ccv = this.update.ccv
+        this.close()
+    },
+    }        
+}
 </script>

@@ -40,6 +40,10 @@
 import axios from "axios";
 
 const back_end_base = "http://localhost:5000"
+// const customer_base_url = "/customers/:username";
+// const staff_base_url = "/staffs/:username";
+// const manager_base_url = "/managers/:username";
+// const rider_base_url = "/riders/:username";
 
 export default {
   name: "Login",
@@ -54,16 +58,17 @@ export default {
 
       axios.post(back_end_schema, { username: this.username, password: this.password})
       .then((response) => {
+        console.log(response.data)
         if(response.status == 200) {
-          console.log(response.data)
+
           if(response.data.position == 'customer')
-            this.$router.push(back_end_base + '/customers/' + this.username)
+            this.$router.push('/customers/' + this.username)
           else if(response.data.position == 'staffs') 
-            this.$router.push(back_end_base + '/staffs/' + this.username)
+            this.$router.push('/staffs/' + this.username)
           else if(response.data.position == 'manager') 
-            this.$router.push(back_end_base + '/managers/' + this.username)
+            this.$router.push('/managers/' + this.username)
           else 
-            this.$router.push(back_end_base + '/riders/' + this.username)
+            this.$router.push('/riders/' + this.username)
         }  
       }, (error) => {
         console.log(error);

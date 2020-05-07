@@ -74,9 +74,9 @@
               lg="3"
             >
               <v-card>
-                <v-card-title class="subheading font-weight-bold">{{ item.name }}
+                <v-card-title class="subheading font-weight-bold">{{ item.fName }}
             	</v-card-title>
-            	<v-card-title class="subheading font-weight">No.order: {{ item.number_order }}
+            	<v-card-title class="subheading font-weight">No.order: {{ item.noOfOrders }}
                 <v-spacer></v-spacer>
                 <v-btn
                   color="green"
@@ -106,7 +106,7 @@
                     :key="index"
                   >
                     <v-list-item-content :class="{ 'blue--text': sortBy === key }">{{ key }}:</v-list-item-content>
-                    <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">{{ item[key.toLowerCase()] }}</v-list-item-content>
+                    <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">{{ item[key] }}</v-list-item-content>
                   </v-list-item>
                 </v-list>
 
@@ -189,92 +189,96 @@
 </template>
 
 <script>
-    export default {
-        name: 'Menu',
-        data () {
-	    return {
-	      itemsPerPageArray: [4, 8, 12],
-	      search: '',
-	      filter: {},
-	      sortDesc: false,
-	      page: 1,
-	      itemsPerPage: 4,
-	      sortBy: 'name',
-	      keys: [
-	        'Name',
-	        'category',
-	        'limit',
-	        'available',
-	        'price',
-	      ],
-	      items: [
-	        {
-	          name: 'Frozen Yogurt',
-	          category: "dessert",
-	          limit: 100,
-	          available: "Ready",
-	          number_order: 0,
-	          price: "2.5 SGD"
-	        },
-	        {
-	          name: 'Ice cream sandwich',
-	          category: "dessert",
-	          limit: 50,
-	          available: "Ready",
-	          number_order: 0,
-	          price: "5 SGD"
-	        },
-	        {
-	          name: 'Eclair',
-	          category: "dessert",
-	          limit: 10,
-	          available: "Ready",
-	          number_order: 0,
-	          price: "5.5 SGD"
-	        },
-	        {
-	          name: 'Cupcake',
-	          category: "dessert",
-	          limit: 100,
-	          available: "Ready",
-	          number_order: 0,
-	          price: "2 SGD"
-	        }   
-	      ],
-    }
+import axios from "axios";
+
+const back_end_base = "http://localhost:5000"
+
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};
+
+export default {
+    name: 'Menu',
+    data () {
+  return {
+    itemsPerPageArray: [4, 8, 12],
+    search: '',
+    filter: {},
+    sortDesc: false,
+    page: 1,
+    itemsPerPage: 4,
+    sortBy: 'name',
+    keys: [
+      'fName',
+      'fCategory',
+      'limit',
+      'availability',
+      'price',
+    ],
+    items: [],
+  }
+},
+computed: {
+  numberOfPages () {
+    return Math.ceil(this.items.length / this.itemsPerPage)
   },
-  computed: {
-    numberOfPages () {
-      return Math.ceil(this.items.length / this.itemsPerPage)
-    },
-    filteredKeys () {
-      return this.keys.filter(key => key !== `Name`)
-    },
+  filteredKeys () {
+    return this.keys.filter(key => key !== `Name`)
   },
-  methods: {
-    nextPage () {
-      if (this.page + 1 <= this.numberOfPages) this.page += 1
-    },
-    formerPage () {
-      if (this.page - 1 >= 1) this.page -= 1
-    },
-    updateItemsPerPage (number) {
-      this.itemsPerPage = number
-    },
-    add_to_cart(item) {
-    	if(item.number_order < item.limit)
-    		item.number_order += 1;    
-    },
-    remove_from_cart(item) {
-    	if(item.number_order >= 1)
-    		item.number_order -= 1;
-    },
-    check_out() {
-    	this.$router.push("/checkout");
-    },
-    back() {
-      this.$router.go(-1);
-    },
+},
+
+created () {
+  this.initialize()
+},
+methods: {
+  nextPage () {
+    if (this.page + 1 <= this.numberOfPages) this.page += 1
+  },
+  formerPage () {
+    if (this.page - 1 >= 1) this.page -= 1
+  },
+  updateItemsPerPage (number) {
+    this.itemsPerPage = number
+  },
+  add_to_cart(item) {
+  	if(item.noOfOrders < item.limit)
+  		item.noOfOrders += 1;    
+  },
+  remove_from_cart(item) {
+  	if(item.noOfOrders >= 1)
+  		item.noOfOrders -= 1;
+  },
+  check_out() {
+  	this.$router.push("/checkout");
+  },
+  back() {
+    this.$router.go(-1);
+  },
+  load_menu() {
+    var back_end_schema = back_end_base + '/customer/' + this.$route.params.username + '/order'
+    var data = {
+      rName: [this.$route.params.restaurant],
+      rCategory: '',
+      location: '',
+      fName: '',
+      fCategory: '',
+      }
+    axios.post(back_end_schema, data, options)  
+    .then((response) => {
+      if(response.status == 200) {
+        console.log(response.data.data)
+        this.items = response.data.data
+      }
+    }, (error) => {
+      console.log(error);
+    });
+  },
+  initialize() {
+    this.load_menu()
+  }
+
   },
 }
 </script>
