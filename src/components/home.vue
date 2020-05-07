@@ -32,7 +32,6 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>DELIVERY</v-toolbar-title>
     </v-app-bar>
-
     
     <v-footer
       color="indigo"

@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>LIGHTNING DELIVERY</h1>
+    <h1 align="center">DELIVERY</h1>
   </div>
 </template>
 

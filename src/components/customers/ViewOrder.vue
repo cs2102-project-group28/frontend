@@ -10,6 +10,15 @@
       show-expand
       class="elevation-1"
     >
+    <template v-slot:item.actions="{ item }">
+        <v-icon
+          small
+          @click="cancel_order(item)"
+          :disabled=item.not_cancelable
+        >
+          mdi-delete
+        </v-icon>
+      </template>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Current Orders</v-toolbar-title>
@@ -35,6 +44,7 @@
 	      </template>
 	    </v-simple-table>
       </template>
+
     </v-data-table>
   </v-app>
 </div>
@@ -43,7 +53,7 @@
 <script>
     export default {
       name: 'ViewOrder',
-	  data: () => ({
+	  data: () => ({	
 	    expanded: [],
       	singleExpand: true,
 	    dialog: false,
@@ -55,13 +65,15 @@
 	        value: 'restaurant',
 	      },
 	      { text: 'Total', value: 'total' },
-	      { text: 'Ordered time', value: "20:00" },
+	      { text: 'Ordered time', value: 'start_time' },
 	      { text: '', value: 'data-table-expand' },
+	      { text: '', value: 'actions', sortable: false },
 	    ],
 	    orders:[
 	    	{
 	    	restaurant: "Delight dessert",
 	    	total: 20,
+	    	start_time: "08 April 2020 15:30:00",
 		    items: [
 			        {
 			          name: 'Frozen Yogurt',
@@ -114,12 +126,21 @@
 			          price: 1.0
 			        },
 			      ],
+			not_cancelable: false,
 			},
 	    ],	
 	  }),
 
 	  methods: {
-	  	//add cancel here
+	  	cancel_order(item) {
+	  		//this.$store.dispatch(CANCEL_ORDER)
+	  		if(Date.now() - Date.parse(item.start_time) <= 600000) {
+	        	const index = this.orders.indexOf(item)
+	        	confirm('Are you sure you want to cancel this order?') && this.orders.splice(index, 1)
+	  		} else {
+	  			item.not_cancelable = true
+	  		}
+	  	}
 	  	},
     }
 </script>

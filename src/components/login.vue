@@ -6,7 +6,7 @@
         <v-form>
           <v-card class="elevation-12">
             <v-toolbar dark color="blue">
-              <v-toolbar-title>Login form</v-toolbar-title>
+              <v-toolbar-title>Delivery login</v-toolbar-title>
             </v-toolbar>
             <v-alert
               color="error"
@@ -37,6 +37,10 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const back_end_base = "http://0.0.0.0:5000"
+
 export default {
   name: "Login",
   data: () => ({
@@ -46,19 +50,24 @@ export default {
   }),
   methods: {
     login() {
-      this.$router.push("/customers");
-      this.$store.dispatch("LOGIN", {
-        username: this.username,
-        password: this.password
-      })
-      .then(success => {
-        this.$router.push("/customers/" + this.username);
-        console.log(success);
-      })
-      .catch(error => {
-        this.error = true;
+      var back_end_schema = back_end_base + '/login'
+
+      axios.post(back_end_schema, { username: this.username, password: this.password})
+      .then((response) => {
+        if(response.status == 200) {
+          if(response.data.pos == 'customer')
+            this.$router.push(back_end_base + '/customers/' + this.username)
+          else if(response.data.pos == 'staffs') 
+            this.$router.push(back_end_base + '/staffs/' + this.username)
+          else if(response.data.pos == 'manager') 
+            this.$router.push(back_end_base + '/managers/' + this.username)
+          else 
+            this.$router.push(back_end_base + '/riders/' + this.username)
+        }  
+      }, (error) => {
         console.log(error);
-      })
+      });
+      
     }
   }
 };

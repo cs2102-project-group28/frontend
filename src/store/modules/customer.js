@@ -22,22 +22,17 @@ export default {
       });
     },
     GET_ACCOUNT: ({ commit }, { username, email, password }) => {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(back_end_base + "/register", {
+      return axios.post(back_end_base + "/register", {
             username,
             email,
             password
-          })
-          .then(({ data, status }) => {
+          }).then(({ data, status }) => {
             if (status === 201) {
               resolve(true);
             }
-          })
-          .catch(error => {
+          }).catch(error => {
             reject(error);
           });
       });
     }
-  }
 };

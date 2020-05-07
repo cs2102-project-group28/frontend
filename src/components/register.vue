@@ -7,7 +7,7 @@
       <v-flex xs12 sm8 md8>
         <v-card class="elevation-12">
           <v-toolbar dark color="blue">
-            <v-toolbar-title>Signup form</v-toolbar-title>
+            <v-toolbar-title>Signup</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form>
@@ -56,6 +56,16 @@
             </v-form>
           </v-card-text>
           <v-divider light></v-divider>
+          <v-radio-group v-model="radioGroup">
+            <v-radio
+              v-for="n in 5"
+              :key="n"
+              :label="`${user_type[n - 1]}`"
+              :value="n-1"
+            ></v-radio>
+          </v-radio-group>  
+          <v-divider light></v-divider>
+
           <v-card-actions>
             <v-btn to="/login" rounded color="black" dark>Back</v-btn>
             <v-spacer></v-spacer>
@@ -71,9 +81,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const back_end_base = "http://0.0.0.0:5000"
+
 export default {
   name: "Register",
   data: () => ({
+    radioGroup: 0,
+    user_type: [ 'customer', 'manager', 'staff', 'full-time rider', 'part-time rider'],
+    user_type_backend: [ 'customer', 'manager', 'staff', 'rider'],
     userExists: false,
     username: '', 
     phone: '',
@@ -91,31 +108,21 @@ export default {
   methods: {
     register() {
       if (this.valid()) {
-        this.$router.push('/login');
-        this.$store.dispatch('REGISTER', {
+        var back_end_schema = back_end_base + '/register'
+
+        axios.post(back_end_schema, { 
           username: this.username,
-          phone: this.phone,
-          password: this.password
-        })
-        .then( 
-          ({ status }) => { 
-          if (status == 200) {
-            this.$store.commit("SET_NOTIFICATION", {
-            display: true,
-            text: 'Your account has been successfully created! you can now login.',
-            alertClass: "danger"
-            });
-            console.log(status);
-            this.$router.push('/login');
-          }
-          else {
-            console.log("API error, response code is not valid");
-          }
-        })
-        .catch (error => {
-          this.userExists = true;
-          console.log(error);
-        })
+          password: this.password, 
+          phone: this.phone, 
+          user_type: this.user_type_backend[this.user_type_select(this.radioGroup)], 
+          rider_type: this.rider_type(this.user_type)})
+        .then((response) => {
+        if(response.status == 200) {
+          this.$router.push('/login')
+        }  
+      }, (error) => {
+        console.log(error);
+      });
       }
       else {
         this.notMatchConfirmPassword = true;
@@ -123,7 +130,21 @@ export default {
     },
     valid() {
       return this.password === this.confirm_password;
-    }
+    },
+    rider_type(rider) {
+      if(rider == 'full-time rider')
+        return 'fullTime'
+      else if(rider == 'part-time rider')
+        return 'partTime'
+      else
+        return ''
+    },
+    user_type_select(value) {
+      if(value == 3 || value == 4)
+        return 3
+      else
+        return value
+    },
   }
 };
 </script>
